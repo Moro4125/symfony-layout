@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout id="layout-example" template="@SymfonyLayout/layout.html.twig">
+    <!-- Menu -->
+    <stripe class="b-stripe_abc">
+        <column>
+            <block class="b-block_main-menu" uri="/.block/main-menu">
+                <arg name="scheme" value="default"/>
+                <arg name="fixed" flag="true"/>
+            </block>
+        </column>
+    </stripe>
+    <!-- Breadcrumbs -->
+    <stripe class="b-stripe_abc">
+        <column>
+            <block extends="breadcrumbs">
+                <arg name="heading" request="heading"/>
+                <arg name="leaf" request="article.title"/>
+            </block>
+        </column>
+    </stripe>
+    <!-- Content columns -->
+    <stripe class="b-stripe_ab-c">
+        <column class="b-column_ab">
+            <block id="container"><!-- Main content. --></block>
+            <block class="b-block_comments" uri="/.block/comments">
+                <arg name="entity_id" request="article_id"/>
+                <arg name="count" config="max_comments_count"/>
+            </block>
+        </column>
+        <column class="b-column_c">
+            <block class="b-block_advertising" uri="/.block/advertising" external="https://google.com/advertising">
+                <arg name="place" value="ADV_PLACE_01"/>
+            </block>
+            <block class="b-block_editor" uri="/.block/editor">
+                <block uri="/.block/element-list">
+                    <arg name="heading" request="heading"/>
+                    <arg name="tags" array="people"/>
+                    <arg name="tags" array="cats,dogs"/>
+                </block>
+            </block>
+        </column>
+    </stripe>
+    <!-- Footer. -->
+    <stripe class="b-stripe_abc">
+        <column>
+            <block uri="/.block/footer"/>
+        </column>
+    </stripe>
+</layout>

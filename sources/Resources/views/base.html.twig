@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% spaceless %}
+<html>
+<head>
+	<meta charset="UTF-8">
+	{% block head %}{% endblock %}
+</head>
+<body>
+<layout>
+	{% block body %}{% endblock %}
+</layout>
+{% block foot %}{% endblock %}
+</body>
+</html>
+{% endspaceless %}

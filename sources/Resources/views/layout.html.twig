@@ -1,0 +1,41 @@
+{% spaceless %}
+	{%- set id = id|default('') ? ' id="' ~ id ~ '"' : "" -%}
+	{%- set class = "b-layout" ~ (class|default("") ? " " ~ class : "") -%}
+	<div class="{{ class }}"{{ id|raw }}>
+		<div class="b-layout__in">
+			{%- for stripe in stripes -%}
+				{%- set class = "b-stripe" ~ (stripe.class|default("") ? " " ~ stripe.class : "") -%}
+				{%- set id = stripe.id|default('') ? ' id="' ~ stripe.id ~ '"' : "" -%}
+				<div class="{{ class }}"{{ id|raw }}>
+					<div class="b-stripe__in">
+						{%- for column in stripe.columns -%}
+							{%- set class = "b-column" ~ (column.class|default("") ? " " ~ column.class : "") -%}
+							{%- set id = column.id|default('') ? ' id="' ~ column.id ~ '"' : "" -%}
+							<div class="{{ class }}"{{ id|raw }}>
+								<div class="b-column__in">
+									{%- for block in column.blocks -%}
+										{%- set class = "b-block" ~ (block.class|default("") ? " " ~ block.class : "") -%}
+										{%- set id = block.id|default('') ? ' id="' ~ block.id ~ '"' : "" -%}
+										<div class="{{ class }}"{{ id|raw }}>
+											{%- if block.uri|default(false) -%}
+												{%- if block.external|default(false) -%}
+													<!--#include virtual="{{ block.external ~ block.uri|raw }}"-->
+												{%- else -%}
+													{{- render_esi(block.uri) -}}
+												{%- endif -%}
+											{%- elseif block.id|default("") == "container" -%}
+												<!--=# delimiter #=-->
+											{%- else -%}
+												<!-- empty block -->
+											{%- endif -%}
+										</div>
+									{%- endfor -%}
+								</div>
+							</div>
+						{%- endfor -%}
+					</div>
+				</div>
+			{%- endfor -%}
+		</div>
+	</div>
+{% endspaceless %}
