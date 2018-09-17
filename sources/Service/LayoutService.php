@@ -129,9 +129,6 @@ class LayoutService
 				case self::CHUNK_HEAD:
 				case self::CHUNK_FOOT:
 					return $this->_getContentEx($layout, $attributes, $chunk);
-
-				default:
-					return $this->_getContent($layout, $attributes);
 			}
 		}
 		finally {
@@ -139,6 +136,8 @@ class LayoutService
 				$watch->stop();
 			}
 		}
+
+		return $this->_getContent($layout, $attributes);
 	}
 
 	/**
@@ -194,12 +193,6 @@ class LayoutService
 				$currentEntity->setExternal($key, $cache[$key]);
 			}
 		}
-
-		/*
-		echo json_encode($entity->getTemplateParameters(['heading' => 'stars'], ['list_items_count' => 21]),
-			JSON_PRETTY_PRINT);
-		die();
-		// */
 
 		if (isset($watch)) {
 			$watch->stop();

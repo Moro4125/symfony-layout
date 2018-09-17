@@ -55,31 +55,6 @@ class SymfonyLayoutConfiguration implements ConfigurationInterface
 			->prototype('variable');
 
 		$root->arrayNode(self::P_OPTIONS)
-			->normalizeKeys(false)
-			->useAttributeAsKey(self::P_OPTIONS)
-			->beforeNormalization()
-			->always()
-			->then(function ($paths) {
-				$normalized = array();
-				foreach ($paths as $path => $namespace) {
-					if (\is_array($namespace)) {
-						// xml
-						$path = $namespace['value'];
-						$namespace = $namespace['namespace'];
-					}
-
-					// path within the default namespace
-					if (ctype_digit((string)$path)) {
-						$path = $namespace;
-						$namespace = null;
-					}
-
-					$normalized[$path] = $namespace;
-				}
-
-				return $normalized;
-			})
-			->end()
 			->prototype('variable');
 
 		$root->scalarNode(self::P_RENDERER)

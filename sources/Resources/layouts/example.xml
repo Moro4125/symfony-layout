@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layout id="layout-example" template="@SymfonyLayout/layout.html.twig">
+<layout id="layout-example" xmlns="http://symfony.com/schema/dic/layouts" template="@SymfonyLayout/layout.html.twig">
     <!-- Menu -->
     <stripe class="b-stripe_abc">
         <column>

@@ -30,6 +30,7 @@
     <xs:complexType name="blockType">
         <xs:sequence>
             <xs:element name="arg" type="argType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="block" type="blockType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:string"/>
         <xs:attribute name="class" type="xs:string"/>
