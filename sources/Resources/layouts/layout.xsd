@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://symfony.com/schema/dic/layouts" targetNamespace="http://symfony.com/schema/dic/layouts"
+           elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="layout" type="layoutType"/>
+    <xs:complexType name="layoutType">
+        <xs:sequence>
+            <xs:element name="stripe" type="stripeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="extends" type="xs:string"/>
+        <xs:attribute name="template" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="stripeType">
+        <xs:sequence>
+            <xs:element name="column" type="columnType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="extends" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="columnType">
+        <xs:sequence>
+            <xs:element name="block" type="blockType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="extends" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="blockType">
+        <xs:sequence>
+            <xs:element name="arg" type="argType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="extends" type="xs:string"/>
+        <xs:attribute name="uri" type="xs:string"/>
+        <xs:attribute name="route" type="xs:string"/>
+        <xs:attribute name="external" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="argType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="value" type="xs:string"/>
+                <xs:attribute name="flag" type="xs:string"/>
+                <xs:attribute name="request" type="xs:string"/>
+                <xs:attribute name="config" type="xs:string"/>
+                <xs:attribute name="array" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>

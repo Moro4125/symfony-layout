@@ -80,11 +80,14 @@ class KernelResponseListener
 		if (!$request->get('without_layout')) {
 			$event = new LayoutResolveEvent($event->getKernel(), $request, $event->getRequestType());
 			$this->_dispatcher->dispatch(LayoutResolveEvent::NAME, $event);
-			$layout = $event->hasLayout() ? $event->getLayout() : 'default';
+			$layout = $event->hasLayout() ? $event->getLayout() : false;
 		}
 
 		if ($layout && $this->_logger) {
 			$this->_logger->info(sprintf('Matched layout "%1$s".', $layout));
+		} elseif ($this->_logger) {
+			$route = $request->attributes->get('_route');
+			$this->_logger->warning(sprintf('No layout is associated with route "%1$s".', $route));
 		}
 
 		if ($layout) {
