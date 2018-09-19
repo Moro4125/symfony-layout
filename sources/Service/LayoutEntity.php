@@ -10,6 +10,12 @@ use SimpleXMLElement;
  */
 class LayoutEntity
 {
+	const TAG_ARG  = 'arg';
+	const ATTR_ID  = 'id';
+	const ATTR_URI = 'uri';
+	const ARGS     = 'args';
+	const DEFAULTS = 'defaults';
+
 	/** @var SimpleXMLElement */
 	private $_layout;
 	/** @var array */
@@ -75,7 +81,7 @@ class LayoutEntity
 		}
 
 		foreach ($node->children() as $child) {
-			if ($child->getName() !== 'arg') {
+			if ($child->getName() !== self::TAG_ARG) {
 				$list = $this->_getExternals($child);
 				$result = array_merge($result, $list);
 			}
@@ -126,7 +132,7 @@ class LayoutEntity
 		}
 
 		foreach ($node->children() as $child) {
-			if ($child->getName() === 'arg') {
+			if ($child->getName() === self::TAG_ARG) {
 				$attributes = $child->attributes();
 				$value = null;
 
@@ -148,7 +154,7 @@ class LayoutEntity
 				/** @noinspection PhpUndefinedFieldInspection */
 				if (!isset($value) && $a = $attributes->array) {
 					/** @noinspection PhpUndefinedFieldInspection */
-					$value = $result['args'][(string)$attributes->name] ?? [];
+					$value = $result[self::ARGS][(string)$attributes->name] ?? [];
 					/** @noinspection PhpUndefinedFieldInspection */
 					$list = explode(',', (string)$attributes->array);
 					$value = array_merge($value, array_map('trim', $list));
@@ -168,12 +174,12 @@ class LayoutEntity
 					/** @noinspection PhpUndefinedFieldInspection */
 					if ($attributes->optional && !empty($this->_booleans[(string)$attributes->optional])) {
 						/** @noinspection PhpUndefinedFieldInspection */
-						$result['args']['defaults'][(string)$attributes->name] = (string)$a;
+						$result[self::ARGS][self::DEFAULTS][(string)$attributes->name] = (string)$a;
 					}
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				$result['args'][(string)$attributes->name] = $value;
+				$result[self::ARGS][(string)$attributes->name] = $value;
 			} elseif ($value = $this->_getParameters($child, $request, $config)) {
 				$items[$child->getName() . 's'][] = $value;
 			}
@@ -191,7 +197,7 @@ class LayoutEntity
 	private function _applyExtends(array $node, array $attributes, array $config): array
 	{
 		foreach ($node as $key => $value) {
-			if ($key !== 'args' && is_array($value)) {
+			if ($key !== self::ARGS && is_array($value)) {
 				foreach ($value as $index => $next) {
 					$node[$key][$index] = $this->_applyExtends($next, $attributes, $config);
 				}
@@ -222,13 +228,13 @@ class LayoutEntity
 				$result[] = $value;
 			} elseif (!isset($result[$key]) || !is_array($result[$key]) || !is_array($value)) {
 				$result[$key] = $value;
-			} elseif ($key === 'args' || $isArgs) {
+			} elseif ($key === self::ARGS || $isArgs) {
 				$result[$key] = $this->_mergeParameters($result[$key], $value, true);
 			} else {
 				foreach ($value as $index => $item) {
-					if (isset($item['id'])) {
+					if (isset($item[self::ATTR_ID])) {
 						foreach ($result[$key] as $i) {
-							if (isset($i['id']) && $i['id'] === $item['id']) {
+							if (isset($i[self::ATTR_ID]) && $i[self::ATTR_ID] === $item[self::ATTR_ID]) {
 								$result[$key][$i] = $this->_mergeParameters($result[$key][$i], $item);
 								continue 2;
 							}
@@ -249,36 +255,43 @@ class LayoutEntity
 	 */
 	private function _normalizeParameters(array $node): array
 	{
-		if (isset($node['args']['defaults'])) {
-			foreach ($node['args']['defaults'] as $key => $value) {
-				if (($node['args'][$key] ?? null) === $value) {
-					unset($node['args'][$key]);
+		if (isset($node[self::ARGS][self::DEFAULTS])) {
+			foreach ($node[self::ARGS][self::DEFAULTS] as $key => $value) {
+				if (($node[self::ARGS][$key] ?? null) === $value) {
+					unset($node[self::ARGS][$key]);
 				}
 			}
 
-			unset($node['args']['defaults']);
+			unset($node[self::ARGS][self::DEFAULTS]);
 		}
 
-		if (isset($node['uri'])) {
+		if (isset($node[self::ATTR_URI])) {
 			$query = [];
 
 			foreach ($node as $key => $value) {
-				if ($key === 'args') {
+				if ($key === self::ARGS) {
 					$query = $this->_mergeWithDotInKeys($value, $query);
 					unset($node[$key]);
 				} elseif (is_array($value)) {
 					foreach (array_map([$this, __FUNCTION__], $value) as $v) {
-						$query[$key][] = empty($v['uri']) ? json_encode($v, JSON_UNESCAPED_UNICODE) : $v['uri'];
+						if (empty($v[self::ATTR_URI])) {
+							$query[$key][] = json_encode($v, JSON_UNESCAPED_UNICODE);
+						} else {
+							$query[$key][] = $v[self::ATTR_URI];
+						}
 					}
 
 					unset($node[$key]);
 				}
 			}
 
-			$node['uri'] .= $query ? ((strpos($node['uri'], '?') ? '&' : '?') . http_build_query($query)) : '';
+			if ($query) {
+				$node[self::ATTR_URI] .= (strpos($node[self::ATTR_URI], '?') ? '&' : '?');
+				$node[self::ATTR_URI] .= http_build_query($query);
+			}
 		} else {
 			foreach ($node as $key => $value) {
-				if ($key === 'args') {
+				if ($key === self::ARGS) {
 					$node[$key] = $this->_mergeWithDotInKeys($value, []);
 				} elseif (is_array($value)) {
 					$node[$key] = array_map([$this, __FUNCTION__], $value);
@@ -316,7 +329,7 @@ class LayoutEntity
 	private function _getUsedAttributes(SimpleXMLElement $node)
 	{
 		foreach ($node->children() as $child) {
-			if ($child->getName() === 'arg') {
+			if ($child->getName() === self::TAG_ARG) {
 				/** @noinspection PhpUndefinedFieldInspection */
 				if ($child->attributes()->request) {
 					/** @noinspection PhpUndefinedFieldInspection */
@@ -351,7 +364,7 @@ class LayoutEntity
 		$result = [];
 
 		if ($template = $node[$attr] ?? null) {
-			$current = ['args' => $node['args']];
+			$current = [self::ARGS => $node[self::ARGS]];
 
 			foreach ($node as $key => $value) {
 				if (!is_array($value)) {
@@ -363,7 +376,7 @@ class LayoutEntity
 		}
 
 		foreach ($node as $key => $value) {
-			if ($key !== 'args' && is_array($value)) {
+			if ($key !== self::ARGS && is_array($value)) {
 				foreach ($this->_getTemplatesEx($value, $attr) as $k => $v) {
 					$result[$k] = array_merge($result[$k] ?? [], $v);
 				}
