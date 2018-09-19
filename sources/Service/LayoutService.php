@@ -15,6 +15,7 @@ use Twig_Environment;
 class LayoutService
 {
 	const INTERNAL_URI = '/.layout?';
+	const EXTERNAL_URI = '/.external/';
 	const KEY_LAYOUT   = '_layout';
 	const KEY_CHUNK    = '_chunk';
 	const DELIMITER    = '<!--=# delimiter #=-->';

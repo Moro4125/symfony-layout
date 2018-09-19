@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://symfony.com/schema/dic/layouts" targetNamespace="http://symfony.com/schema/dic/layouts"
-           elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns="http://symfony.com/schema/dic/layouts" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://symfony.com/schema/dic/layouts" elementFormDefault="qualified">
     <xs:element name="layout" type="layoutType"/>
     <xs:complexType name="layoutType">
         <xs:sequence>

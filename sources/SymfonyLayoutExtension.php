@@ -51,6 +51,18 @@ class SymfonyLayoutExtension extends Extension implements CompilerPassInterface,
 		$container->prependExtensionConfig('twig', [
 			'paths' => ['%kernel.project_dir%/vendor/moro/symfony-layout/sources/Resources/views' => 'SymfonyLayout'],
 		]);
+		$container->prependExtensionConfig('eight_points_guzzle', [
+			'clients' => [
+				'symfony_layout' => [
+					'options' => [
+						'timeout' => 3,
+						'headers' => [
+							'User-Agent' => 'EightpointsGuzzleBundle/SymfonyLayout'
+						],
+					],
+				],
+			],
+		]);
 	}
 
 	/**
@@ -61,15 +73,21 @@ class SymfonyLayoutExtension extends Extension implements CompilerPassInterface,
 	{
 		$configuration = $this->getConfiguration($configs, $container);
 		$config = $this->processConfiguration($configuration, $configs);
+		$useNull = ContainerInterface::NULL_ON_INVALID_REFERENCE;
 
 		$definition = $container->register(LayoutService::class);
 		$definition->addArgument(new Reference('event_dispatcher'));
 		$definition->addArgument(new Reference('twig'));
-		$definition->addArgument(new Reference('debug.stopwatch', ContainerInterface::IGNORE_ON_INVALID_REFERENCE));
+		$definition->addArgument(new Reference('debug.stopwatch', $useNull));
 		$definition->addArgument($config[SymfonyLayoutConfiguration::P_OPTIONS]);
 
 		$definition = $container->register(KernelRequestListener::class);
 		$definition->addArgument(new Reference(LayoutService::class));
+		$definition->addArgument(new Reference('eight_points_guzzle.client.symfony_layout', $useNull));
+		$definition->addArgument(new Reference('logger', $useNull));
+		$definition->addTag('monolog.logger', [
+			'channel' => 'layout',
+		]);
 		$definition->addTag('kernel.event_listener', [
 			'event'    => KernelEvents::REQUEST,
 			'method'   => 'onKernelRequest',
@@ -89,7 +107,10 @@ class SymfonyLayoutExtension extends Extension implements CompilerPassInterface,
 		$definition->addArgument(new Reference('event_dispatcher'));
 		$definition->addArgument(new Reference('esi'));
 		$definition->addArgument($config[SymfonyLayoutConfiguration::P_RENDERER]);
-		$definition->addArgument(new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+		$definition->addArgument(new Reference('logger', $useNull));
+		$definition->addTag('monolog.logger', [
+			'channel' => 'layout',
+		]);
 		$definition->addTag('kernel.event_listener', [
 			'event'    => KernelEvents::RESPONSE,
 			'method'   => 'onKernelResponse',

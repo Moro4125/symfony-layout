@@ -22,7 +22,8 @@
 													<!--=# delimiter #=-->
 												{%- elseif block.uri|default(false) -%}
 													{%- if block.external|default(false) -%}
-														<!--#include virtual="{{ block.external ~ block.uri|raw }}"-->
+														<!-- {{ ("https://" ~ block.external ~ block.uri)|raw }} -->
+														{{- render_esi("/.external/" ~ block.external ~ block.uri) -}}
 													{%- else -%}
 														{{- render_esi(block.uri) -}}
 													{%- endif -%}
