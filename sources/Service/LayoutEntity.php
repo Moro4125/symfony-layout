@@ -20,6 +20,7 @@ class LayoutEntity
 	private $_externals;
 	/** @var array */
 	private $_booleans = [
+		''      => false,
 		'1'     => true,
 		'0'     => false,
 		'true'  => true,
@@ -106,16 +107,16 @@ class LayoutEntity
 			$this->_parameters = $parameters;
 		}
 
-		return $withoutNormalize ? $this->_parameters : $this->_normalizeUri($this->_parameters);
+		return $withoutNormalize ? $this->_parameters : $this->_normalizeParameters($this->_parameters);
 	}
 
 	/**
 	 * @param SimpleXMLElement $node
-	 * @param array $attributes
+	 * @param array $request
 	 * @param array $config
 	 * @return array
 	 */
-	private function _getParameters(SimpleXMLElement $node, array $attributes, array $config): array
+	private function _getParameters(SimpleXMLElement $node, array $request, array $config): array
 	{
 		$items = [];
 		$result = [];
@@ -126,45 +127,54 @@ class LayoutEntity
 
 		foreach ($node->children() as $child) {
 			if ($child->getName() === 'arg') {
+				$attributes = $child->attributes();
 				$value = null;
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if (!isset($value) && $a = $child->attributes()->request) {
-					$value = $this->_getWithDotInKey((string)$a, $attributes);
+				if (!isset($value) && $a = $attributes->request) {
+					$value = $this->_getWithDotInKey((string)$a, $request);
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if (!isset($value) && $a = $child->attributes()->config) {
+				if (!isset($value) && $a = $attributes->config) {
 					$value = $this->_getWithDotInKey((string)$a, $config);
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if (!isset($value) && $a = $child->attributes()->flag) {
+				if (!isset($value) && $a = $attributes->flag) {
 					$value = $this->_booleans[strtolower((string)$a)] ?? null;
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if (!isset($value) && $a = $child->attributes()->array) {
+				if (!isset($value) && $a = $attributes->array) {
 					/** @noinspection PhpUndefinedFieldInspection */
-					$value = $result['args'][(string)$child->attributes()->name] ?? [];
+					$value = $result['args'][(string)$attributes->name] ?? [];
 					/** @noinspection PhpUndefinedFieldInspection */
-					$list = explode(',', (string)$child->attributes()->array);
+					$list = explode(',', (string)$attributes->array);
 					$value = array_merge($value, array_map('trim', $list));
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if ($a = $child->attributes()->value) {
+				if ($a = $attributes->value) {
 					$value = (string)$a;
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				if (!isset($value) && $a = $child->attributes()->default) {
-					$value = (string)$a;
+				if ($a = $attributes->default) {
+					if (!isset($value)) {
+						$value = (string)$a;
+					}
+
+					/** @noinspection PhpUndefinedFieldInspection */
+					if ($attributes->optional && !empty($this->_booleans[(string)$attributes->optional])) {
+						/** @noinspection PhpUndefinedFieldInspection */
+						$result['args']['defaults'][(string)$attributes->name] = (string)$a;
+					}
 				}
 
 				/** @noinspection PhpUndefinedFieldInspection */
-				$result['args'][(string)$child->attributes()->name] = $value;
-			} elseif ($value = $this->_getParameters($child, $attributes, $config)) {
+				$result['args'][(string)$attributes->name] = $value;
+			} elseif ($value = $this->_getParameters($child, $request, $config)) {
 				$items[$child->getName() . 's'][] = $value;
 			}
 		}
@@ -200,9 +210,10 @@ class LayoutEntity
 	/**
 	 * @param array $prev
 	 * @param array $next
+	 * @param bool|null $isArgs
 	 * @return array
 	 */
-	private function _mergeParameters(array $prev, array $next): array
+	private function _mergeParameters(array $prev, array $next, bool $isArgs = null): array
 	{
 		$result = $prev;
 
@@ -211,8 +222,8 @@ class LayoutEntity
 				$result[] = $value;
 			} elseif (!isset($result[$key]) || !is_array($result[$key]) || !is_array($value)) {
 				$result[$key] = $value;
-			} elseif ($key === 'args') {
-				$result[$key] = $this->_mergeParameters($result[$key], $value);
+			} elseif ($key === 'args' || $isArgs) {
+				$result[$key] = $this->_mergeParameters($result[$key], $value, true);
 			} else {
 				foreach ($value as $index => $item) {
 					if (isset($item['id'])) {
@@ -236,8 +247,18 @@ class LayoutEntity
 	 * @param array $node
 	 * @return array
 	 */
-	private function _normalizeUri(array $node): array
+	private function _normalizeParameters(array $node): array
 	{
+		if (isset($node['args']['defaults'])) {
+			foreach ($node['args']['defaults'] as $key => $value) {
+				if (($node['args'][$key] ?? null) === $value) {
+					unset($node['args'][$key]);
+				}
+			}
+
+			unset($node['args']['defaults']);
+		}
+
 		if (isset($node['uri'])) {
 			$query = [];
 

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block xmlns="http://symfony.com/schema/dic/blocks">
+    <arg name="comment" value="Default arguments."/>
+</block>

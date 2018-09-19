@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout xmlns="http://symfony.com/schema/dic/layouts" template="@SymfonyLayout/layout.html.twig">
+    <stripe>
+        <column>
+            <block id="container">
+                <arg name="comment" value="The place for content from main controller."/>
+            </block>
+        </column>
+    </stripe>
+</layout>
