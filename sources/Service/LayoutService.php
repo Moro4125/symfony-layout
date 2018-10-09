@@ -10,7 +10,6 @@ use Twig_Environment;
 
 /**
  * Class LayoutService
- * @package Layout\Service
  */
 class LayoutService
 {

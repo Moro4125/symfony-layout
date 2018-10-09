@@ -6,7 +6,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class LayoutReceiveEvent
- * @package Layout\Event
  */
 class LayoutReceiveEvent extends Event
 {

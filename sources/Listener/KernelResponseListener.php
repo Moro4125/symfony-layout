@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\HttpCache\SurrogateInterface;
 
 /**
  * Class KernelResponseListener
- * @package Layout\Listener
  */
 class KernelResponseListener
 {

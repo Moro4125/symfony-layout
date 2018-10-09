@@ -14,7 +14,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Class KernelRequestListener
- * @package Layout\Listener
  */
 class KernelRequestListener
 {

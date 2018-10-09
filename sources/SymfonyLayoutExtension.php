@@ -22,7 +22,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Class SymfonyLayout
- * @package Layout
  */
 class SymfonyLayoutExtension extends Extension implements CompilerPassInterface, PrependExtensionInterface
 {

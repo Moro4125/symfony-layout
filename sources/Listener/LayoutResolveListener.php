@@ -14,7 +14,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
  * Class LayoutResolveListener
- * @package Layout\Listener
  */
 class LayoutResolveListener
 {

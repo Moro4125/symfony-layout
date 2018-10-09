@@ -6,7 +6,6 @@ use Moro\SymfonyLayout\Event\LayoutReceiveEvent;
 
 /**
  * Class LayoutReceiveFromFileListener
- * @package Layout\Listener
  */
 class LayoutReceiveFromFileListener
 {

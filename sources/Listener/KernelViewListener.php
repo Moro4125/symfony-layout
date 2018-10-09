@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
 /**
  * Class KernelViewListener
- * @package Layout\Listener
  */
 class KernelViewListener
 {

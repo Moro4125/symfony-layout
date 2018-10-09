@@ -7,7 +7,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * Class FunctionProvider
- * @package Layout\Expression
  */
 class FunctionProvider implements ExpressionFunctionProviderInterface
 {

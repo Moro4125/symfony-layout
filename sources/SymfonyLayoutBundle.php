@@ -6,7 +6,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class SymfonyLayoutBundle
- * @package Layout
  */
 class SymfonyLayoutBundle extends Bundle
 {

@@ -6,7 +6,6 @@ use RuntimeException;
 
 /**
  * Class LayoutNotFoundException
- * @package Layout\Exception
  */
 class LayoutNotFoundException extends RuntimeException
 {

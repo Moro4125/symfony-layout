@@ -6,7 +6,6 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Class LayoutResolveEvent
- * @package Layout\Event
  */
 class LayoutResolveEvent extends KernelEvent
 {

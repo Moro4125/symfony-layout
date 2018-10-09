@@ -7,7 +7,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Class SymfonyLayoutConfiguration
- * @package Layout
  */
 class SymfonyLayoutConfiguration implements ConfigurationInterface
 {

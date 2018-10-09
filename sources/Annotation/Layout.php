@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
  * @Annotation
- * @package Layout\Annotation
  */
 class Layout extends ConfigurationAnnotation
 {

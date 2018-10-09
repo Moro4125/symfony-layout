@@ -6,7 +6,6 @@ use SimpleXMLElement;
 
 /**
  * Class LayoutEntity
- * @package Layout\Service
  */
 class LayoutEntity
 {
