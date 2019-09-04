@@ -1,6 +1,6 @@
 <?php
 
-namespace Moro\SymfonyLayout\Listener;
+namespace Moro\SymfonyLayout\Listener\Kernel;
 
 use Moro\SymfonyLayout\Event\LayoutResolveEvent;
 use Moro\SymfonyLayout\Service\LayoutService;
@@ -11,9 +11,9 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\HttpCache\SurrogateInterface;
 
 /**
- * Class KernelResponseListener
+ * Class ResponseListener
  */
-class KernelResponseListener
+class ResponseListener
 {
 	private $_service;
 	private $_handler;
@@ -61,6 +61,7 @@ class KernelResponseListener
 
 		$response = $event->getResponse();
 		$content = $response->getContent();
+        /** @noinspection HtmlUnknownTag */
 		$pos1 = strpos($content, '<layout>');
 		$pos2 = strpos($content, '</layout>');
 

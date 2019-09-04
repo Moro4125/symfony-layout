@@ -1,13 +1,13 @@
 <?php
 
-namespace Moro\SymfonyLayout\Listener;
+namespace Moro\SymfonyLayout\Listener\Layout;
 
 use Moro\SymfonyLayout\Event\LayoutReceiveEvent;
 
 /**
- * Class LayoutReceiveFromFileListener
+ * Class ReceiveFromFileListener
  */
-class LayoutReceiveFromFileListener
+class ReceiveFromFileListener
 {
 	/** @var array */
 	private $_paths;

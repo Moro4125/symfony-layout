@@ -1,6 +1,6 @@
 <?php
 
-namespace Moro\SymfonyLayout\Service;
+namespace Moro\SymfonyLayout\Entity;
 
 use SimpleXMLElement;
 
@@ -171,11 +171,17 @@ class LayoutEntity
 					}
 
 					/** @noinspection PhpUndefinedFieldInspection */
-					if ($attributes->optional && !empty($this->_booleans[(string)$attributes->optional])) {
+                    if (!empty($this->_booleans[(string)$attributes->optional])) {
 						/** @noinspection PhpUndefinedFieldInspection */
 						$result[self::ARGS][self::DEFAULTS][(string)$attributes->name] = (string)$a;
 					}
-				}
+
+                }
+
+                /** @noinspection PhpUndefinedFieldInspection */
+                if (!isset($value) && !empty($this->_booleans[(string)$attributes->optional])) {
+                    continue;
+                }
 
 				/** @noinspection PhpUndefinedFieldInspection */
 				$result[self::ARGS][(string)$attributes->name] = $value;

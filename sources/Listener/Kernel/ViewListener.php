@@ -1,6 +1,6 @@
 <?php
 
-namespace Moro\SymfonyLayout\Listener;
+namespace Moro\SymfonyLayout\Listener\Kernel;
 
 use Moro\SymfonyLayout\Annotation\Layout;
 use Moro\SymfonyLayout\Service\LayoutService;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 /**
  * Class KernelViewListener
  */
-class KernelViewListener
+class ViewListener
 {
 	/**
 	 * @param GetResponseForControllerResultEvent $event

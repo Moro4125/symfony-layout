@@ -1,6 +1,6 @@
 <?php
 
-namespace Moro\SymfonyLayout\Listener;
+namespace Moro\SymfonyLayout\Listener\Kernel;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -13,9 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
- * Class KernelRequestListener
+ * Class RequestListener
  */
-class KernelRequestListener
+class RequestListener
 {
 	/** @var LayoutService */
 	private $_service;

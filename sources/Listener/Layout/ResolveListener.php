@@ -1,9 +1,10 @@
 <?php
 
-namespace Moro\SymfonyLayout\Listener;
+namespace Moro\SymfonyLayout\Listener\Layout;
 
 use DateTime;
 use Moro\SymfonyLayout\Annotation\Layout;
+use Moro\SymfonyLayout\Definition\DefinitionInterface;
 use Moro\SymfonyLayout\Event\LayoutResolveEvent;
 use Moro\SymfonyLayout\Expression\FunctionProvider;
 use Moro\SymfonyLayout\Service\LayoutService;
@@ -13,9 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 /**
- * Class LayoutResolveListener
+ * Class ResolveListener
  */
-class LayoutResolveListener
+class ResolveListener
 {
 	/** @var ExpressionLanguage */
 	private $_language;
@@ -46,7 +47,7 @@ class LayoutResolveListener
 
 		if ($layouts = $request->attributes->get(LayoutService::KEY_LAYOUT)) {
 			foreach ((array)$layouts as $layout) {
-				if ($layout instanceof Layout && $layout->hasActive() && !$this->_isActive($layout, $request)) {
+                if ($layout instanceof DefinitionInterface && !$this->_isActive($layout, $request)) {
 					continue;
 				}
 
@@ -105,7 +106,6 @@ class LayoutResolveListener
 		}
 	}
 
-
 	/**
 	 * @param Layout $layout
 	 * @param Request $request
@@ -113,10 +113,14 @@ class LayoutResolveListener
 	 */
 	private function _isActive(Layout $layout, Request $request): bool
 	{
+        if (!$layout->hasActive()) {
+            return true;
+        }
+
 		$expression = $layout->getActive();
 
 		if (is_string($expression)) {
-			$values = array_merge($request->attributes->all(), ['request' => $request]);
+            $values = ['query' => $request->query->all(), 'attributes' => $request->attributes->all()];
 			$result = $this->_language->evaluate($expression, $values);
 
 			return !empty($result);

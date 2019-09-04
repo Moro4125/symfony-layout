@@ -2,6 +2,9 @@
 <layout xmlns="http://symfony.com/schema/dic/layouts" template="@SymfonyLayout/layout.html.twig">
     <stripe>
         <column>
+            <block uri="/.blocks/main-menu">
+                <arg name="active" request="heading"/>
+            </block>
             <block id="container">
                 <arg name="comment" value="The place for content from main controller."/>
             </block>

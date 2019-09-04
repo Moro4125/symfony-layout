@@ -21,8 +21,8 @@ class SymfonyLayoutConfiguration implements ConfigurationInterface
 	 */
 	public function getConfigTreeBuilder()
 	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root(self::ROOT);
+        $treeBuilder = new TreeBuilder(self::ROOT);
+        $rootNode = $treeBuilder->getRootNode();
 		$root = $rootNode->children();
 
 		$root->arrayNode(self::P_PATHS)
