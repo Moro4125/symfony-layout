@@ -2,7 +2,7 @@
 
 namespace Moro\SymfonyLayout\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class LayoutReceiveEvent

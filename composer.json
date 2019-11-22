@@ -27,9 +27,11 @@
     "sensio/framework-extra-bundle": "^5.0",
     "symfony/expression-language": "^4.0",
     "symfony/framework-bundle": "^4.0",
-    "symfony/psr-http-message-bridge": "^1.0"
+    "symfony/psr-http-message-bridge": "^1.0",
+    "symfony/contracts": "^1.0"
   },
   "require-dev": {
+    "twig/twig": "^3.0",
     "eightpoints/guzzle-bundle": "^7.0",
     "symfony/monolog-bundle": "^3.2",
     "symfony/profiler-pack": "^1.0",

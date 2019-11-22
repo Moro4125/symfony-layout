@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 	{% block layout %}
 		{%- set id = id|default('') ? ' id="' ~ id|e ~ '"' : "" -%}
 		{%- set class = "b-layout" ~ (class|default("") ? " " ~ class : "") -%}
@@ -43,4 +43,4 @@
 			</div>
 		</div>
 	{% endblock %}
-{% endspaceless %}
+{% endapply %}

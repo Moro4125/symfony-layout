@@ -7,7 +7,7 @@ use Moro\SymfonyLayout\Event\LayoutReceiveEvent;
 use Moro\SymfonyLayout\Exception\LayoutNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Twig_Environment;
+use Twig\Environment;
 
 /**
  * Class LayoutService
@@ -26,7 +26,7 @@ class LayoutService
 
     /** @var EventDispatcherInterface */
     private $_dispatcher;
-    /** @var Twig_Environment */
+    /** @var Environment */
     private $_twig;
     /** @var Stopwatch|null */
     private $_stopwatch;
@@ -43,13 +43,13 @@ class LayoutService
 
     /**
      * @param EventDispatcherInterface $dispatcher
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      * @param Stopwatch $stopwatch
      * @param array $options
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
-        Twig_Environment $twig,
+        Environment $twig,
         ?Stopwatch $stopwatch,
         array $options
     ) {
@@ -156,7 +156,7 @@ class LayoutService
         }
 
         $event = new LayoutReceiveEvent($layout);
-        $this->_dispatcher->dispatch(LayoutReceiveEvent::NAME, $event);
+        $this->_dispatcher->dispatch($event, LayoutReceiveEvent::NAME);
 
         if (!$event->hasXml()) {
             $message = sprintf('Layout "%1$s" is not exists.', $layout);
@@ -182,7 +182,7 @@ class LayoutService
 
             if (empty($cache[$key])) {
                 $event = new LayoutReceiveEvent($key);
-                $this->_dispatcher->dispatch(LayoutReceiveEvent::NAME, $event);
+                $this->_dispatcher->dispatch($event, LayoutReceiveEvent::NAME);
 
                 if ($event->hasXml()) {
                     $extendsEntity = new LayoutEntity($event->getXml());
